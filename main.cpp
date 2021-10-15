@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <functional>
 #include <map>
@@ -45,17 +46,45 @@ std::function<bool(solution_t&)> validation_function_factory(graph_t _graph)
     };
 }
 
-void test_if_it_works()
-{
-    graph_t test_graph = {
-        {0, 1, 0, 0, 1, 0},
-        {1, 0, 1, 0, 1, 0},
-        {0, 1, 0, 1, 0, 0},
-        {0, 0, 1, 0, 1, 1},
-        {1, 1, 0, 1, 0, 1},
-        {0, 0, 0, 1, 1, 0}
-    };
+void prepare_graphviz_output(const graph_t& graph, const solution_t& sol) {
+    if(sol.empty()) {
+        //TO DO
+    }
+}
 
+graph_t read_from_file(const char* filename)
+{
+    graph_t _graph;
+    std::ifstream filestream(filename);
+    std::string line;
+    if(!filestream.is_open())
+    {
+        throw std::string("Unable to read file ");
+    }
+    while(std::getline(filestream, line))
+    {
+        std::vector<bool> tmp;
+        for(auto c : line)
+        {
+            switch(c)
+            {
+                case('0'):
+                    tmp.push_back(false);
+                    break;
+                case('1'):
+                    tmp.push_back(true);
+                default:
+                    break;
+            }
+        }
+        _graph.push_back(tmp);
+    }
+    filestream.close();
+    return _graph;
+}
+
+void test_if_it_works(graph_t& test_graph)
+{
     auto validation_func = validation_function_factory(test_graph);
     std::vector<solution_t> solutions;
     solutions.push_back(solution_t{1, 0, 1, 0, 0, 1});
@@ -75,6 +104,18 @@ void test_if_it_works()
 
 int main(int argc, char **argv)
 {
-    test_if_it_works();
+    graph_t problem_graph;
+    if(argc>1)
+    {
+        try
+        {
+            problem_graph=(std::move(read_from_file(argv[1])));
+            test_if_it_works(problem_graph);
+        }
+        catch(std::string &e)
+        {
+            std::cerr << e << '\n';
+        };
+    }
     return 0;
 }
