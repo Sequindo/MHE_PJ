@@ -18,7 +18,7 @@ std::ostream& operator <<(std::ostream& os, const solution_t& sol)
     return os;
 }
 
-std::function<bool(solution_t&)> validation_function_factory(graph_t _graph)
+std::function<bool(solution_t&)> validation_function_factory(graph_t& _graph)
 {
     return [=](solution_t& _vec_vector) -> bool {
         for(int i=0;i<_vec_vector.size();i++)
@@ -46,10 +46,36 @@ std::function<bool(solution_t&)> validation_function_factory(graph_t _graph)
     };
 }
 
-void prepare_graphviz_output(const graph_t& graph, const solution_t& sol) {
-    if(sol.empty()) {
-        //TO DO
+void prepare_graphviz_output(const graph_t& graph, const char* filename, const solution_t& sol={}) {
+    std::ofstream ofs(filename, std::ios::trunc);
+    if(!ofs.is_open())
+    {
+        throw std::string("Cannot open file for writing!\n");
     }
+    ofs << "strict graph G {\n\tnode [shape=circle style=filled]\n";
+    int v_num = graph.at(0).size();
+    for(int i=0;i<v_num; i++)
+    {
+        for(int j=0;j<v_num;j++)
+        {
+            if(graph.at(i).at(j))
+            {
+                ofs << "\t" << i+1 << "--" << j+1 << "\n";
+            }
+        }
+    }
+    if(!sol.empty()) {
+        for(int i=0;i<sol.size();i++)
+        {
+            if(sol.at(i))
+            {
+                ofs << "\t" << i+1 << " [style=filled, fillcolor=lightblue]\n";
+            }
+        }
+    }
+    ofs << "}";
+    ofs.close();
+    
 }
 
 graph_t read_from_file(const char* filename)
@@ -59,7 +85,7 @@ graph_t read_from_file(const char* filename)
     std::string line;
     if(!filestream.is_open())
     {
-        throw std::string("Unable to read file ");
+        throw std::string("Unable to read file\n");
     }
     while(std::getline(filestream, line))
     {
@@ -110,11 +136,29 @@ int main(int argc, char **argv)
         try
         {
             problem_graph=(std::move(read_from_file(argv[1])));
-            test_if_it_works(problem_graph);
+            //test_if_it_works(problem_graph);
+            try 
+            {
+                solution_t working_sol{1, 0, 1, 0, 0, 1};
+                auto validation_func = validation_function_factory(problem_graph);
+                try
+                {
+                    validation_func(working_sol);
+                    prepare_graphviz_output(problem_graph, "graphviz.txt", working_sol);
+                }
+                catch(const std::string& bad_solution)
+                {
+                    std::cerr << bad_solution << '\n';
+                }
+            }
+            catch(std::string &graphviz_error)
+            {
+                std::cerr << graphviz_error << "\n";
+            }
         }
-        catch(std::string &e)
+        catch(std::string &input_file_error)
         {
-            std::cerr << e << '\n';
+            std::cerr << input_file_error << '\n';
         };
     }
     return 0;
