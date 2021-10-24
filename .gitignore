@@ -1,4 +1,8 @@
 #Ignore vscode files
 .vscode
 .vscode/*
+#Ignore Cmake build files
+build/
 main
+#graphviz output
+graphviz.txt
