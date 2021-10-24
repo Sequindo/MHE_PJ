@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <vector>
 #include <fstream>
 #include <functional>
@@ -73,13 +74,14 @@ public:
         ofs << "}";
         ofs.close();
     }
-    std::function<bool(solution_t&)> validation_function_factory()
+    std::function<int(solution_t&)> validation_function_factory()
     {
-        return [=](solution_t& _vec_vector) -> bool {
-            for(int i=0;i<_vec_vector.size();i++)
+        return [=](solution_t& _vec_vector) -> int {
+            int size_set = std::count(_vec_vector.begin(), _vec_vector.end(), true); //proposed set size
+            for(size_t i=0;i<_vec_vector.size();i++)
             {
                 if(_vec_vector.at(i)==false) continue;
-                for(int j=0;j<_vec_vector.size();j++)
+                for(size_t j=0;j<_vec_vector.size();j++)
                 {
                     if(i==j || _vec_vector[j]==false) continue;
                     else
@@ -97,13 +99,14 @@ public:
                     }
                 }
             }
-            return true;
+            return size_set;
         };
     }
 
     solution_t generateSolution()
     {
-        std::default_random_engine generator;
+        std::random_device rd;
+        std::mt19937 generator(rd());
         std::uniform_int_distribution<int> distribution(0,1);
         auto roll = std::bind (distribution, generator);
 
@@ -114,16 +117,14 @@ public:
         }
         return _solution;
     }
-    solution_t nextSolution(solution_t& _solution)
+    solution_t nextSolution(const solution_t& _solution) //increment vector by a logical 1
     {
-        _solution.back() = ~_solution.back(); //negate last bit;
-        int pos = 1;
-        auto nextVal = _solution.back()-pos;
-        while(nextVal)
+        solution_t _newSolution = _solution;
+        for(auto it = _newSolution.rbegin(); it != _newSolution.rend(); it++)
         {
-            ~nextVal;
-            nextVal = _solution.back()-(++pos);
+            *it = !*it;
+            if(*it) break;
         }
-        return _solution;
+        return _newSolution;
     }
 };

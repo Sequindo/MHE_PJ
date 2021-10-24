@@ -12,42 +12,29 @@ std::ostream& operator <<(std::ostream& os, const solution_t& sol)
     }
     return os;
 }
-/*
-void test_if_it_works(Graph& test_graph)
-{
-    auto validation_func = test_graph.validation_function_factory();
-    std::vector<solution_t> solutions;
-    solutions.push_back(solution_t{1, 0, 1, 0, 0, 1});
-    solutions.push_back(solution_t{1, 0, 1, 0, 1, 1});
-    for(auto sol : solutions)
-    {
-        try
-        {
-            bool ret = validation_func(sol);
-            if(ret) std::cout << sol <<  "describes an independent set\n";
-        } catch(std::string &str)
-        {
-            std::cout << str << std::endl;
-        };
-    }
-}
-*/
+
 int main(int argc, char **argv)
 {
     Graph problemGraph;
+    int set_size = 0;
     if(argc>1)
     {
-        try
+        problemGraph.readFromFile(argv[1]);
+        while(true)
         {
-            problemGraph.readFromFile(argv[1]);
-            solution_t pSolution = problemGraph.generateSolution();
-            auto validation_func = problemGraph.validation_function_factory();
-            validation_func(pSolution);
-            problemGraph.prepareGraphVizOutput("graphviz.txt", pSolution);
-        }
-        catch(std::string &e)
-        {
-            std::cerr << e << std::endl;
+            try
+            {
+                solution_t pSolution = problemGraph.generateSolution();
+                solution_t pSolutionNext = std::move(problemGraph.nextSolution(pSolution));
+                auto validation_func = problemGraph.validation_function_factory();
+                set_size = validation_func(pSolutionNext);
+                problemGraph.prepareGraphVizOutput("graphviz.txt", pSolutionNext);
+                break;
+            }
+            catch(std::string &e)
+            {
+                std::cerr << e << std::endl;
+            }
         }
     }
     return 0;
