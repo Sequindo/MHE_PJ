@@ -17,25 +17,31 @@ int main(int argc, char **argv)
 {
     Graph problemGraph;
     int set_size = 0;
+
     if(argc>1)
     {
         problemGraph.readFromFile(argv[1]);
-        while(true)
+        solution_t pInitialSolution, pSolutionNext;
+        pInitialSolution = std::move(problemGraph.generateSolution());
+        pSolutionNext = pInitialSolution;
+        do
         {
             try
             {
-                solution_t pSolution = problemGraph.generateSolution();
-                solution_t pSolutionNext = std::move(problemGraph.nextSolution(pSolution));
+                pSolutionNext = std::move(problemGraph.nextSolution(pSolutionNext));
                 auto validation_func = problemGraph.validation_function_factory();
-                set_size = validation_func(pSolutionNext);
-                problemGraph.prepareGraphVizOutput("graphviz.txt", pSolutionNext);
-                break;
+                int curr_set_size = validation_func(pSolutionNext);
+                if(curr_set_size > set_size)
+                {
+                    set_size = curr_set_size;
+                    problemGraph.prepareGraphVizOutput("graphviz.txt", pSolutionNext);
+                }
             }
             catch(std::string &e)
             {
                 std::cerr << e << std::endl;
             }
-        }
+        } while(pSolutionNext != pInitialSolution);
     }
     return 0;
 }
