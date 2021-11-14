@@ -68,10 +68,12 @@ void hillClimb(Graph& graph, const char* graphvizFilenameOutput, int iterations)
     auto start = std::chrono::high_resolution_clock::now();
     do
     {
-        try
+        prev_set_size = set_size;
+        for(solution_t& solutionFromList : pointSolutions)
         {
-            prev_set_size = set_size;
-            for(auto& solutionFromList : pointSolutions)
+            std::cout << "Iteration no " << iterations << std::endl;
+            std::cout << solutionFromList << std::endl;
+            try
             {
                 curr_set_size = validation_func(solutionFromList);
                 if(curr_set_size > set_size)
@@ -82,13 +84,14 @@ void hillClimb(Graph& graph, const char* graphvizFilenameOutput, int iterations)
                     break;
                 }
             }
-            if(prev_set_size == set_size) break; //no improvement
+            catch(std::string &e)
+            {
+                //std::cerr << e << std::endl;
+            }
         }
-        catch(std::string &e)
-        {
-            std::cerr << e << std::endl;
-        }
+        if(prev_set_size == set_size) break; //no improvement
     } while(iterations--);
+
     auto end = std::chrono::high_resolution_clock::now();
     auto time_span = std::chrono::duration_cast<DurationType>(end - start);
     Graph::prepareGraphVizOutput(graph.getGraphDesc(), graphvizFilenameOutput, initialSolution, time_span);
@@ -111,7 +114,7 @@ int main(int argc, char **argv)
         //Graph problemGraphExtraLarge{std::move(Graph::generateProblemGraph(XTRALARGE_PROBLEM_SIZE, "generated_graph_exlarge.csv"))};
         bruteForceMethod<std::chrono::milliseconds>(problemGraphShort, "graphviz_output_short_bruteforce.txt");
 
-        hillClimb<std::chrono::milliseconds>(problemGraphShort, "graphviz_output_short_hillclimb.txt", 20);
+        hillClimb<std::chrono::milliseconds>(problemGraphShort, "graphviz_output_short_hillclimb.txt", 100);
         //bruteForceMethod<std::chrono::milliseconds>(problemGraphMiddle, "graphviz_output_middle.txt");
         //bruteForceMethod<std::chrono::milliseconds>(problemGraphLarge, "graphviz_output_large.txt");
         //bruteForceMethod<std::chrono::milliseconds>(problemGraphLargest, "graphviz_output_largest.txt");
