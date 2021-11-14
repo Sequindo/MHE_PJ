@@ -109,6 +109,22 @@ public:
         return _newSolution;
     }
 
+    static std::vector<solution_t> allSolutionsForPoints(solution_t& initialSolution)
+    {
+        std::vector<solution_t> neighborhood;
+        for(int i=0; i<initialSolution.size(); i++)
+        {
+            solution_t sol = initialSolution;
+            if(!sol.at(i))
+            {
+                sol.at(i) = true;
+                neighborhood.push_back(std::move(sol));
+                continue;
+            }
+        }
+        return neighborhood;
+    }
+
     static graph_desc_t generateProblemGraph(size_t size, const char* filename=NULL)
     {
         std::random_device rd;
