@@ -7,6 +7,17 @@
 
 using graph_desc_t = std::vector<std::vector<bool>>;
 using solution_t = std::vector<bool>; //vector with values (0,1) for each vertice - telling if given vertice belongs to independent set
+
+std::ostream& operator <<(std::ostream& os, const solution_t& sol)
+{
+    os << "Vertices with indexes: ";
+    for(int i=0;i<sol.size();i++)
+    {
+        if(sol.at(i)) os << i+1 << " ";
+    }
+    return os;
+}
+
 class Graph {
     graph_desc_t desc_graph;
 
@@ -49,7 +60,8 @@ public:
     std::function<int(solution_t&)> validation_function_factory()
     {
         return [=](solution_t& _vec_vector) -> int {
-            int size_set = std::count(_vec_vector.begin(), _vec_vector.end(), true); //proposed set size
+            uint8_t size_set = std::count(_vec_vector.begin(), _vec_vector.end(), true); //proposed set size
+            int8_t errorCount = 0;
             for(size_t i=0;i<_vec_vector.size();i++)
             {
                 if(_vec_vector.at(i)==false) continue;
@@ -59,19 +71,20 @@ public:
                     else
                     {
                         if(desc_graph.at(i).at(j)==true || desc_graph.at(j).at(i)==true)
-                        {
-                            std::string s;
+                        {   
+                            /*std::string s;
                             s.append("Given vertices ");
                             s.append(std::to_string(i));
                             s.append(" i ");
                             s.append(std::to_string(j));
                             s.append(" are adjacent!\n");
-                            throw std::string(s);
+                            throw std::string(s);*/
+                            errorCount--;
                         }
                     }
                 }
             }
-            return size_set;
+            return (errorCount<0) ? errorCount/2 : size_set;
         };
     }
     size_t getGraphSize()
@@ -112,15 +125,11 @@ public:
     static std::vector<solution_t> allSolutionsForPoints(solution_t& initialSolution)
     {
         std::vector<solution_t> neighborhood;
-        for(int i=0; i<initialSolution.size(); i++)
+        for(int i=0;i<initialSolution.size();i++)
         {
-            solution_t sol = initialSolution;
-            if(!sol.at(i))
-            {
-                sol.at(i) = true;
-                neighborhood.push_back(std::move(sol));
-                continue;
-            }
+            solution_t sol(initialSolution);
+            sol[i] = sol[i]^true;
+            neighborhood.push_back(std::move(sol));
         }
         return neighborhood;
     }
