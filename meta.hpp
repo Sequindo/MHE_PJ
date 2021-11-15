@@ -31,12 +31,7 @@ static void bruteForceMethod(Graph& graph, const char* graphvizFilenameOutput)
 template<typename DurationType = std::chrono::seconds>
 static void hillClimb(Graph& graph, const char* graphvizFilenameOutput, int iterations, bool randomized=false, int burnout = 0)
 {
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::uniform_int_distribution<int> distribution(0,graph.getGraphSize()-1); //get random index - starting point
-    solution_t initialSolution(graph.getGraphSize(), false);
-    initialSolution[distribution(generator)] = true; //set starting point
-
+    solution_t initialSolution = std::move(Graph::generateStartPoint(graph.getGraphSize()));
     std::vector<solution_t> pointSolutions = std::move(Graph::allSolutionsForPoints(initialSolution));
     auto validation_func = graph.validation_function_factory();
     
@@ -65,7 +60,7 @@ static void hillClimb(Graph& graph, const char* graphvizFilenameOutput, int iter
         {
             for(int i=0;i<burnout;i++)
             {
-                solution_t& random_solution = pointSolutions[distribution(generator)];
+                solution_t random_solution = Graph::returnRandomElement<solution_t>(pointSolutions, pointSolutions.size());
                 curr_set_size = validation_func(random_solution);
                 if(curr_set_size > set_size)
                 {

@@ -134,6 +134,25 @@ public:
         return neighborhood;
     }
 
+    static solution_t generateStartPoint(const size_t& size)
+    {
+        std::random_device rd;
+        std::mt19937 generator(rd());
+        std::uniform_int_distribution<int> distribution(0,size-1);
+        solution_t startPointSolution(size, false);
+        startPointSolution[distribution(generator)] = true;
+        return startPointSolution;
+    }
+
+    template<typename T>
+    static T returnRandomElement(std::vector<T>& data, int size)
+    {
+        std::random_device rd;
+        std::mt19937 generator(rd());
+        std::uniform_int_distribution<int> distribution(0,size-1);
+        return data[distribution(generator)];
+    }
+
     static graph_desc_t generateProblemGraph(size_t size, const char* filename=NULL)
     {
         std::random_device rd;
