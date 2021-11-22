@@ -27,6 +27,7 @@ int main(int argc, char **argv)
         Meta::bruteForceMethod<std::chrono::nanoseconds>(problemGraphShort, "graphviz_output_short_bruteforce.txt");
         Meta::hillClimb<std::chrono::nanoseconds>(problemGraphShort, "graphviz_output_short_hillclimb_classic.txt", 1000);
         Meta::hillClimb<std::chrono::nanoseconds>(problemGraphShort, "graphviz_output_short_hillclimb_randomized.txt", 1000, true, 45);
+        Meta::tabuSearch<std::chrono::nanoseconds>(problemGraphShort, "graphviz_output_short_hillclimb_taboo.txt", 1000, 20);
     }
     return 0;
 }
