@@ -28,6 +28,10 @@ public:
     Graph(graph_desc_t& _desc_graph) : desc_graph(_desc_graph) {}
     Graph(graph_desc_t&& _desc_graph) : desc_graph(std::move(_desc_graph)) {}
 
+    void operator=(Graph&& _other)
+    {
+        desc_graph = std::move(_other.desc_graph);
+    }
     void readFromFile(const char* filename)
     {
         std::ifstream filestream(filename);
