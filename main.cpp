@@ -115,16 +115,16 @@ int main(int argc, char **argv)
         switch(algType)
         {
             case(BRUTEFORCE):
-                result = std::move(Meta::bruteForceMethod(problemGraph, graphVizFilenameOutput.c_str()));
+                result = std::move(Meta::bruteForceMethod<std::chrono::milliseconds>(problemGraph, graphVizFilenameOutput.c_str()));
                 break;
             case(HILL_CLIMB_STOCHASTIC):
-                result = std::move(Meta::hillClimb(problemGraph, graphVizFilenameOutput.c_str(), iterations));
+                result = std::move(Meta::hillClimb<std::chrono::milliseconds>(problemGraph, graphVizFilenameOutput.c_str(), iterations));
                 break;
             case(HILL_CLIMB_RANDOMIZED):
-                result = std::move(Meta::hillClimb(problemGraph, graphVizFilenameOutput.c_str(), iterations, true, burnout));
+                result = std::move(Meta::hillClimb<std::chrono::milliseconds>(problemGraph, graphVizFilenameOutput.c_str(), iterations, true, burnout));
                 break;
             case(TABU_SEARCH):
-                result = std::move(Meta::tabuSearch(problemGraph, graphVizFilenameOutput.c_str(), tabuSize, iterations));
+                result = std::move(Meta::tabuSearch<std::chrono::milliseconds>(problemGraph, graphVizFilenameOutput.c_str(), tabuSize, iterations));
                 break;
             default:
                 break;
