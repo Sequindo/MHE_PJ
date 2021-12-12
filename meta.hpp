@@ -6,9 +6,9 @@ class Meta
 {
 public:
 template<typename DurationType = std::chrono::seconds>
-static void bruteForceMethod(Graph& graph, const char* graphvizFilenameOutput)
+static std::pair<std::chrono::duration<double>, int16_t> bruteForceMethod(Graph& graph, const char* graphvizFilenameOutput)
 {
-    int8_t set_size = INT8_MIN;
+    int16_t set_size = INT16_MIN;
     solution_t pInitialSolution, pSolutionNext, pMaxSolution;
     pInitialSolution = std::move(Graph::generateSolution(graph.getGraphSize()));
     pMaxSolution = pSolutionNext = pInitialSolution;
@@ -27,19 +27,19 @@ static void bruteForceMethod(Graph& graph, const char* graphvizFilenameOutput)
     auto end = std::chrono::high_resolution_clock::now();
     auto time_span = std::chrono::duration_cast<DurationType>(end - start);
     Graph::prepareGraphVizOutput(graph.getGraphDesc(), graphvizFilenameOutput, pMaxSolution, time_span);
-    return;
+    return std::make_pair(time_span, set_size);
 }
 
 template<typename DurationType = std::chrono::seconds>
-static void hillClimb(Graph& graph, const char* graphvizFilenameOutput, int iterations, bool randomized=false, int burnout = 0)
+static std::pair<std::chrono::duration<double>, int16_t> hillClimb(Graph& graph, const char* graphvizFilenameOutput, int iterations, bool randomized=false, int burnout = 0)
 {
     solution_t initialSolution = std::move(Graph::generateStartPoint(graph.getGraphSize()));
     std::vector<solution_t> pointSolutions = std::move(Graph::allSolutionsForPoints(initialSolution));
     auto validation_func = graph.validation_function_factory();
     
-    int8_t set_size = -INT8_MIN;
-    int8_t curr_set_size = set_size;
-    int8_t prev_set_size = set_size;
+    int16_t set_size = INT16_MIN;
+    auto curr_set_size = set_size;
+    auto prev_set_size = set_size;
     auto start = std::chrono::high_resolution_clock::now();
     do
     {
@@ -78,11 +78,11 @@ static void hillClimb(Graph& graph, const char* graphvizFilenameOutput, int iter
     auto end = std::chrono::high_resolution_clock::now();
     auto time_span = std::chrono::duration_cast<DurationType>(end - start);
     Graph::prepareGraphVizOutput(graph.getGraphDesc(), graphvizFilenameOutput, initialSolution, time_span);
-    return;
+    return std::make_pair(time_span, set_size);
 }
 
 template<typename DurationType = std::chrono::seconds>
-static void tabuSearch(Graph& graph, const char* graphvizFilenameOutput, int tabooSize, int iterations)
+static std::pair<std::chrono::duration<double>, int16_t> tabuSearch(Graph& graph, const char* graphvizFilenameOutput, int tabooSize, int iterations)
 {
     auto start = std::chrono::high_resolution_clock::now();
     solution_t bestSolution = std::move(Graph::generateStartPoint(graph.getGraphSize()));
@@ -126,6 +126,6 @@ static void tabuSearch(Graph& graph, const char* graphvizFilenameOutput, int tab
     auto end = std::chrono::high_resolution_clock::now();
     auto time_span = std::chrono::duration_cast<DurationType>(end - start);
     Graph::prepareGraphVizOutput(graph.getGraphDesc(), graphvizFilenameOutput, bestSolution, time_span);
-    return;
+    return std::make_pair(time_span, std::count(bestSolution.begin(), bestSolution.end(), true));
 }
 };

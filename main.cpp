@@ -27,6 +27,7 @@ int main(int argc, char **argv)
     std::string graphVizFilenameOutput = "";
     bool generateGraphFile = false;
     bool generateOnly = false;
+    bool printResults = false;
     unsigned int iterations = 3000;
     unsigned int burnout = 0;
     unsigned int tabuSize = 1000;
@@ -97,9 +98,14 @@ int main(int argc, char **argv)
             generateGraphFile = true;
             generateOnly = true;
         }
+        else if(strcmp(argv[i], "-print_result")==0)
+        {
+            printResults = true;
+        }
     }
 
     Graph problemGraph;
+    std::pair<std::chrono::duration<double>, int16_t> result;
     if (graphFilename.empty()) graphFilename = "generated_graph.csv";
     if (graphFilename.empty()) graphVizFilenameOutput = "graphviz_output.csv";
     if (!generateGraphFile && !generateOnly) problemGraph.readFromFile(graphFilename.c_str());
@@ -109,20 +115,24 @@ int main(int argc, char **argv)
         switch(algType)
         {
             case(BRUTEFORCE):
-                Meta::bruteForceMethod(problemGraph, graphVizFilenameOutput.c_str());
+                result = std::move(Meta::bruteForceMethod(problemGraph, graphVizFilenameOutput.c_str()));
                 break;
             case(HILL_CLIMB_STOCHASTIC):
-                Meta::hillClimb(problemGraph, graphVizFilenameOutput.c_str(), iterations);
+                result = std::move(Meta::hillClimb(problemGraph, graphVizFilenameOutput.c_str(), iterations));
                 break;
             case(HILL_CLIMB_RANDOMIZED):
-                Meta::hillClimb(problemGraph, graphVizFilenameOutput.c_str(), iterations, true, burnout);
+                result = std::move(Meta::hillClimb(problemGraph, graphVizFilenameOutput.c_str(), iterations, true, burnout));
                 break;
             case(TABU_SEARCH):
-                Meta::tabuSearch(problemGraph, graphVizFilenameOutput.c_str(), tabuSize, iterations);
+                result = std::move(Meta::tabuSearch(problemGraph, graphVizFilenameOutput.c_str(), tabuSize, iterations));
                 break;
             default:
                 break;
         }
+    }
+    if(printResults)
+    {
+        std::cout << result.first.count() << "\n" << result.second << std::endl;
     }
     return 0;
 }
