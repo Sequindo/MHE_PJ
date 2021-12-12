@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "meta.hpp"
 
 enum metaAlgType
@@ -31,67 +32,67 @@ int main(int argc, char **argv)
     unsigned int tabuSize = 1000;
     for(int i=1;i<argc;i++)
     {
-        if(argv[i]=="-hclimb")
+        if(strcmp(argv[i],"-hclimb")==0)
         {
             algType = HILL_CLIMB_STOCHASTIC;
         }
-        else if(argv[i]=="-hclimb_random")
+        else if(strcmp(argv[i],"-hclimb_random")==0)
         {
             algType = HILL_CLIMB_RANDOMIZED;
         }
-        else if(argv[i]=="-tsearch")
+        else if(strcmp(argv[i],"-tsearch")==0)
         {
             algType = TABU_SEARCH;
         }
-        else if(argv[i]=="-bforce")
+        else if(strcmp(argv[i],"-bforce")==0)
         {
             algType = BRUTEFORCE;
         }
-        else if(argv[i]=="-gfile")
+        else if(strcmp(argv[i],"-gfile")==0)
         {
             graphFilename = argv[++i];
         }
-        else if(argv[i]=="-ofile")
+        else if(strcmp(argv[i],"-ofile")==0)
         {
             graphVizFilenameOutput = argv[++i];
         }
-        else if(argv[i]=="-iter")
+        else if(strcmp(argv[i],"-iter")==0)
         {
             iterations = std::stoull(argv[++i]);
         }
-        else if(argv[i]=="-tsize")
+        else if(strcmp(argv[i],"-tsize")==0)
         {
             tabuSize = std::stoull(argv[++i]);
         }
-        else if(argv[i]=="-burnout")
+        else if(strcmp(argv[i],"-burnout")==0)
         {
             burnout = std::stoull(argv[++i]);
         }
-        else if(argv[i]=="-generate")
+        else if(strcmp(argv[i],"-generate")==0)
         {
             generateGraphFile = true;
         }
-        else if(argv[i]=="-size_small")
+        else if(strcmp(argv[i],"-size_small")==0)
         {
             genSize = SHORT_PROBLEM_SIZE;
         }
-        else if(argv[i]=="-size_middle")
+        else if(strcmp(argv[i],"-size_middle")==0)
         {
             genSize = MIDDLE_PROBLEM_SIZE;
         }
-        else if(argv[i]=="-size_large")
+        else if(strcmp(argv[i],"-size_large")==0)
         {
             genSize = LARGE_PROBLEM_SIZE;
         }
-        else if(argv[i]=="-size_largest")
+        else if(strcmp(argv[i],"-size_largest")==0)
         {
             genSize = LARGEST_PROBLEM_SIZE;
         }
-        else if(argv[i]=="-size_extralarge")
+        else if(strcmp(argv[i],"-size_extralarge")==0)
         {
             genSize = XTRALARGE_PROBLEM_SIZE;
         }
-        else if(argv[i]=="-gen_only")
+        else if(strcmp(argv[i],"-gen_only")==0)
         {
             generateGraphFile = true;
             generateOnly = true;
@@ -101,7 +102,7 @@ int main(int argc, char **argv)
     Graph problemGraph;
     if (graphFilename.empty()) graphFilename = "generated_graph.csv";
     if (graphFilename.empty()) graphVizFilenameOutput = "graphviz_output.csv";
-    if (generateGraphFile) problemGraph.readFromFile(graphFilename.c_str());
+    if (!generateGraphFile && !generateOnly) problemGraph.readFromFile(graphFilename.c_str());
     else problemGraph = std::move(Graph::generateProblemGraph(genSize, graphFilename.c_str()));
     if(!generateOnly)
     {
