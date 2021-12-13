@@ -12,11 +12,11 @@ enum metaAlgType
 
 enum generatedGraphSize
 {
-    SHORT_PROBLEM_SIZE = 15,
-    MIDDLE_PROBLEM_SIZE = 22,
-    LARGE_PROBLEM_SIZE = 24,
-    LARGEST_PROBLEM_SIZE = 27,
-    XTRALARGE_PROBLEM_SIZE = 29
+    SHORT_PROBLEM_SIZE = 50,
+    MIDDLE_PROBLEM_SIZE = 75,
+    LARGE_PROBLEM_SIZE = 100,
+    LARGEST_PROBLEM_SIZE = 125,
+    XTRALARGE_PROBLEM_SIZE = 200
 };
 
 int main(int argc, char **argv)

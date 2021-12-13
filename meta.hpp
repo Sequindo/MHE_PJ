@@ -72,8 +72,8 @@ static std::pair<std::chrono::duration<double>, int16_t> hillClimb(Graph& graph,
                     break;
                 }
             }
+            if(prev_set_size == set_size) break; //no improvement
         }
-        if(prev_set_size == set_size) break; //no improvement
     } while(iterations--);
     auto end = std::chrono::high_resolution_clock::now();
     auto time_span = std::chrono::duration_cast<DurationType>(end - start);
