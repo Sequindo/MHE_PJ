@@ -7,3 +7,5 @@ main
 #graphviz outputs + all files with graph desc
 *.txt
 *.csv
+#ignore virtual python environment
+.venv
