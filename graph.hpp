@@ -18,6 +18,9 @@ std::ostream& operator <<(std::ostream& os, const solution_t& sol)
     return os;
 }
 
+std::random_device rd;
+std::mt19937 generator(rd());
+
 class Graph {
     graph_desc_t desc_graph;
 
@@ -102,8 +105,6 @@ public:
 
     static solution_t generateSolution(const size_t& size)
     {
-        std::random_device rd;
-        std::mt19937 generator(rd());
         std::uniform_int_distribution<int> distribution(0,1);
         auto roll = std::bind (distribution, generator);
 
@@ -140,8 +141,6 @@ public:
 
     static solution_t generateStartPoint(const size_t& size)
     {
-        std::random_device rd;
-        std::mt19937 generator(rd());
         std::uniform_int_distribution<int> distribution(0,size-1);
         solution_t startPointSolution(size, false);
         startPointSolution[distribution(generator)] = true;
@@ -151,16 +150,12 @@ public:
     template<typename T>
     static T returnRandomElement(std::vector<T>& data, int size)
     {
-        std::random_device rd;
-        std::mt19937 generator(rd());
         std::uniform_int_distribution<int> distribution(0,size-1);
         return data[distribution(generator)];
     }
 
     static graph_desc_t generateProblemGraph(size_t size, const char* filename=NULL)
     {
-        std::random_device rd;
-        std::mt19937 generator(rd());
         std::uniform_int_distribution<int> distribution(0,1);
         auto roll = std::bind (distribution, generator);
 
