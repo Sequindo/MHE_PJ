@@ -128,13 +128,6 @@ solution_t Graph::generateStartPoint(const size_t& size)
     return startPointSolution;
 }
 
-template<typename T>
-T Graph::returnRandomElement(std::vector<T>& data, int size)
-{
-    std::uniform_int_distribution<int> distribution(0,size-1);
-    return data[distribution(generator)];
-}
-
 graph_desc_t Graph::generateProblemGraph(size_t size, const char* filename) {
     std::uniform_int_distribution<int> distribution(0,1);
     auto roll = std::bind (distribution, generator);
