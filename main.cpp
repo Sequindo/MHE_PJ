@@ -13,6 +13,7 @@ enum metaAlgType
 
 enum generatedGraphSize
 {
+    GA_TEST_PROBELM_SIZE = 12,
     SHORT_PROBLEM_SIZE = 50,
     MIDDLE_PROBLEM_SIZE = 75,
     LARGE_PROBLEM_SIZE = 100,
@@ -135,8 +136,8 @@ int main(int argc, char **argv)
     {
         std::cout << result.first.count() << "\n" << result.second << std::endl;
     } */
-    Graph problemGraph = std::move(Graph::generateProblemGraph(SHORT_PROBLEM_SIZE, "generated_graph.csv"));
+    Graph problemGraph = std::move(Graph::generateProblemGraph(GA_TEST_PROBELM_SIZE, "ga_generated_graph.csv"));
     GeneticAlgorithm ga(problemGraph);
-    ga.generateInitialPopulation(10);
+    ga.generateInitialPopulation(GA_TEST_PROBELM_SIZE/2);
     return 0;
 }

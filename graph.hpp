@@ -1,9 +1,11 @@
+#pragma once
 #include <algorithm>
 #include <vector>
 #include <fstream>
 #include <functional>
-#include <random>
 #include <chrono>
+
+#include "utils.hpp"
 
 using graph_desc_t = std::vector<std::vector<bool>>;
 using solution_t = std::vector<bool>; //vector with values (0,1) for each vertice - telling if given vertice belongs to independent set
@@ -11,8 +13,6 @@ using solution_t = std::vector<bool>; //vector with values (0,1) for each vertic
 std::ostream& operator <<(std::ostream& os, const solution_t& sol);
 
 class Graph {
-    static std::random_device rd;
-    static std::mt19937 generator;
     graph_desc_t desc_graph;
 
 public:

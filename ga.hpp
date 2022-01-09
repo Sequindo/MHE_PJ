@@ -13,8 +13,8 @@ public:
     }
 
     uint16_t fintess(solution_t& candidate);
-
+    void crossover(solution_t& par1, solution_t& par2);
+    solution_t mutate(solution_t& candidate);
     bool check_end_condition();
     solution_t GA();
-
 };

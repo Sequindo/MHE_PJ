@@ -1,8 +1,5 @@
 #include "graph.hpp"
 
-std::random_device Graph::rd;
-std::mt19937 Graph::generator(Graph::rd());
-
 std::ostream& operator <<(std::ostream& os, const solution_t& sol)
 {
     os << "Vertices with indexes: ";
