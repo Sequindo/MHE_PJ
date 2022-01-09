@@ -1,4 +1,3 @@
-#pragma once
 #include <algorithm>
 #include <vector>
 #include <fstream>
@@ -38,7 +37,10 @@ public:
     static solution_t generateStartPoint(const size_t& size);
 
     template<typename T>
-    static T returnRandomElement(std::vector<T>& data, int size);
+    static T returnRandomElement(std::vector<T>& data, int size) {
+        std::uniform_int_distribution<int> distribution(0,size-1);
+        return data[distribution(generator)];
+    }
     static graph_desc_t generateProblemGraph(size_t size, const char* filename=NULL);
 
     static void prepareGraphVizOutput(const graph_desc_t& graph_desc, const char* filename, const solution_t& sol={}, 
