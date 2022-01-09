@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include "meta.hpp"
+#include "ga.hpp"
 
 enum metaAlgType
 {
@@ -103,7 +104,7 @@ int main(int argc, char **argv)
             printResults = true;
         }
     }
-
+    /*
     Graph problemGraph;
     std::pair<std::chrono::duration<double>, int16_t> result;
     if (graphFilename.empty()) graphFilename = "generated_graph.csv";
@@ -133,6 +134,9 @@ int main(int argc, char **argv)
     if(printResults)
     {
         std::cout << result.first.count() << "\n" << result.second << std::endl;
-    }
+    } */
+    Graph problemGraph = std::move(Graph::generateProblemGraph(SHORT_PROBLEM_SIZE, "generated_graph.csv"));
+    GeneticAlgorithm ga(problemGraph);
+    ga.generateInitialPopulation(10);
     return 0;
 }
