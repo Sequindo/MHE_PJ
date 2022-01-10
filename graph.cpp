@@ -84,7 +84,7 @@ graph_desc_t Graph::getGraphDesc()
 solution_t Graph::generateSolution(const size_t& size)
 {
     std::uniform_int_distribution<int> distribution(0,1);
-    auto roll = std::bind (distribution, generator);
+    auto roll = std::bind (distribution, std::ref(generator));
 
     solution_t _solution(size,false);
     for(auto&& v : _solution)
@@ -126,8 +126,6 @@ solution_t Graph::generateStartPoint(const size_t& size)
 }
 
 graph_desc_t Graph::generateProblemGraph(size_t size, const char* filename) {
-    std::uniform_int_distribution<int> distribution(0,1);
-    auto roll = std::bind (distribution, generator);
 
     graph_desc_t newGraph;
     solution_t tmp;
