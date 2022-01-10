@@ -137,7 +137,9 @@ int main(int argc, char **argv)
         std::cout << result.first.count() << "\n" << result.second << std::endl;
     } */
     Graph problemGraph = std::move(Graph::generateProblemGraph(GA_TEST_PROBELM_SIZE, "ga_generated_graph.csv"));
-    GeneticAlgorithm ga(problemGraph);
+    GeneticAlgorithm ga(problemGraph, 0, 0.0, 0.0);
     ga.generateInitialPopulation(GA_TEST_PROBELM_SIZE/2);
+    solution_t* bestCandidate = ga.GA();
+    std::cout << *bestCandidate << std::endl;
     return 0;
 }
